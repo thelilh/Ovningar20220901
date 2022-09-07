@@ -681,13 +681,59 @@ void ExerciseEighteen()
     var diffText = textArray.Sum(t => t.Length) / textArray.Length;
     Console.WriteLine($"Genomsnitt av \"{text}\" är {diffText} bokstäver");
 }
+
+void ExerciseNineteen()
+{
+    int numOne, numTwo;
+    while (true)
+    {
+        Console.WriteLine("Vilken höjd vill du ha?");
+        if (int.TryParse(Console.ReadLine(), out numOne))
+        {
+            break;
+        }
+    }
+    while (true)
+    {
+        Console.WriteLine("Vilken bredd vill du ha?");
+        if (int.TryParse(Console.ReadLine(), out numTwo))
+        {
+            break;
+        }
+    }
+
+    DrawBox(numTwo, numOne, numTwo / 2, numOne / 2, false);
+}
+
+void ExerciseTwenty()
+{
+    int numOne, numTwo;
+    while (true)
+    {
+        Console.WriteLine("Vilken höjd vill du ha?");
+        if (int.TryParse(Console.ReadLine(), out numOne))
+        {
+            break;
+        }
+    }
+    while (true)
+    {
+        Console.WriteLine("Vilken bredd vill du ha?");
+        if (int.TryParse(Console.ReadLine(), out numTwo))
+        {
+            break;
+        }
+    }
+
+    DrawBox(numTwo, numOne, numTwo / 2, numOne / 2, true);
+}
 //Switch-meny funktion
 while (true)
 {
     Console.WriteLine("Välj ett program:");
-    for (var i = 0; i < 18; i++)
+    for (var i = 0; i < 19; i++)
     {
-        Console.WriteLine($"Skriv {i + 1} för Exercise {i + 1}");
+        Console.WriteLine($"Skriv {i + 1} för Uppgift {i + 1}");
     }
     if (int.TryParse(Console.ReadLine(), out var selection))
     {
@@ -747,6 +793,12 @@ while (true)
             case 18:
                 ExerciseEighteen();
                 break;
+            case 19:
+                ExerciseNineteen();
+                break;
+            case 20:
+                ExerciseTwenty();
+                break;
         }
     }
     else
@@ -783,4 +835,42 @@ void PrintSum(int one, int two, string mathCondition)
 string MakeUpper(string mystring)
 {
     return char.ToUpper(mystring[0]) + mystring[1..].ToLower();
+}
+
+void DrawBox(int width, int height, int playerX, int playerY, bool showPlayer)
+{
+    var DrawArray = new string[height];
+    for (var i = 0; i < height; i++)
+    {
+        for (var k = 0; k < width; k++)
+        {
+            if (k == playerX && i == playerY && showPlayer)
+            {
+                DrawArray[i] += "@";
+            }
+            else
+            {
+                if (i == 0 || i == height - 1)
+                {
+                    DrawArray[i] += "#";
+                }
+                else
+                {
+                    if (k == 0 || k == width - 1)
+                    {
+                        DrawArray[i] += "#";
+                    }
+                    else
+                    {
+                        DrawArray[i] += "-";
+                    }
+                }
+            }
+        }
+    }
+
+    foreach (var x in DrawArray)
+    {
+        Console.WriteLine(x);
+    }
 }
