@@ -116,14 +116,13 @@ void ExerciseSix()
     //ska fungera som en simpel miniräknare. Om man t.ex matat
     //in först 3, sedan *, och sist 5, så ska programmet skriva ut “3 * 5 = 15”.
     Console.WriteLine("\nExercise 6\n");
-    int tal1, tal2;
+    double tal1, tal2;
     string? utRakning;
     while (true)
     {
         Console.WriteLine("Skriv det första talet: ");
-        if (int.TryParse(Console.ReadLine(), out var result))
+        if (double.TryParse(Console.ReadLine(), out tal1))
         {
-            tal1 = result;
             break;
         }
 
@@ -143,11 +142,10 @@ void ExerciseSix()
     while (true)
     {
         Console.WriteLine("Skriv det andra talet: ");
-        if (int.TryParse(Console.ReadLine(), out var result))
+        if (double.TryParse(Console.ReadLine(), out tal2))
         {
-            if (result != 0 && utRakning == "/")
+            if (tal2 != 0 && utRakning == "/")
             {
-                tal2 = result;
                 break;
             }
         }
@@ -412,10 +410,11 @@ void ExerciseEleven()
     Console.WriteLine("\nExercise 11\n");
     string[] siffror = { "noll", "ett", "två", "tre", "fyra", "fem", "sex", "sju", "åtta", "nio" };
     int result;
+    string? input;
     while (true)
     {
         Console.WriteLine("Skriv in en siffra");
-        var input = Console.ReadLine();
+        input = Console.ReadLine();
         if (int.TryParse(input, out result))
         {
             break;
@@ -454,10 +453,11 @@ void ExerciseTwelve()
     //inmatade skriv ut dem i omvänd ordning.
     Console.WriteLine("\nExercise 12\n");
     int amountOfNumbers;
+    string? input;
     while (true)
     {
         Console.WriteLine("Hur många tal vill du mata in?");
-        var input = Console.ReadLine();
+        input = Console.ReadLine();
         if (int.TryParse(input, out amountOfNumbers))
         {
             break;
@@ -469,7 +469,7 @@ void ExerciseTwelve()
         while (true)
         {
             Console.WriteLine($"Ange Tal {i + 1}:");
-            var input = Console.ReadLine();
+            input = Console.ReadLine();
             if (int.TryParse(input, out numbArray[i]))
             {
                 break;
@@ -608,12 +608,19 @@ void ExerciseSixteen()
                 mathChar = '*';
             }
             var mathCharIndex = userInput.IndexOf(mathChar);
-            if (int.TryParse(userInput[..mathCharIndex], out var tResultOne))
+            if (double.TryParse(userInput[..mathCharIndex], out var tResultOne))
             {
                 mathCharIndex++;
-                if (int.TryParse(userInput[mathCharIndex..], out var tResultTwo))
+                if (double.TryParse(userInput[mathCharIndex..], out var tResultTwo))
                 {
-                    PrintSum(tResultOne, tResultTwo, mathChar.ToString());
+                    if (!(tResultTwo == 0 && mathChar == '/'))
+                    {
+                        PrintSum(tResultOne, tResultTwo, mathChar.ToString());
+                    }
+                    else
+                    {
+                        Console.WriteLine("Kan inte dividera med 0.");
+                    }
                 }
             }
         }
@@ -702,12 +709,12 @@ void ExerciseNineteen()
         }
     }
 
-    DrawBox(numTwo, numOne, numTwo / 2, numOne / 2, false);
+    PrintArray(DrawBox(numTwo, numOne, numTwo / 2, numOne / 2, false, 0));
 }
 
-void ExerciseTwenty()
+void ExerciseTwenty(bool shouldShowRandom)
 {
-    int numOne, numTwo;
+    int numOne, numTwo, numThree;
     while (true)
     {
         Console.WriteLine("Vilken höjd vill du ha?");
@@ -724,14 +731,93 @@ void ExerciseTwenty()
             break;
         }
     }
+    if (shouldShowRandom)
+    {
+        while (true)
+        {
+            Console.WriteLine("Hur många slumpmässiga '#' vill du ha?");
+            if (int.TryParse(Console.ReadLine(), out numThree))
+            {
+                break;
+            }
+        }
+    }
+    else
+    {
+        numThree = 0;
+    }
 
-    DrawBox(numTwo, numOne, numTwo / 2, numOne / 2, true);
+    var playerX = numTwo / 2;
+    var playerY = numOne / 2;
+    var shouldPlay = true;
+    string[] drawArray;
+    while (shouldPlay)
+    {
+        Console.Clear();
+        drawArray = DrawBox(numTwo, numOne, playerX, playerY, true, numThree);
+        PrintArray(drawArray);
+        var a = Console.ReadKey();
+
+        void Walk(int x, int y)
+        {
+            if (drawArray[playerY][playerX + x] != '#')
+            {
+                playerX += x;
+            }
+            if (drawArray[playerY + y][playerX] != '#')
+            {
+                playerY += y;
+            }
+        }
+        switch (a.Key)
+        {
+            case ConsoleKey.LeftArrow:
+                Walk(-1, 0);
+                break;
+            case ConsoleKey.RightArrow:
+                Walk(1, 0);
+                break;
+            case ConsoleKey.UpArrow:
+                Walk(0, -1);
+                break;
+            case ConsoleKey.DownArrow:
+                Walk(0, 1);
+                break;
+            default:
+                shouldPlay = false;
+                break;
+        }
+    }
 }
+
+void ExerciseTwentyTwo()
+{
+    //Skriv en funktion som kan ta ett godtyckligt
+    //antal strängar som parametrar och som returnerar den längsta av dem.
+    Console.WriteLine("Skriv in ett antal strängar:");
+    var input = Console.ReadLine() ?? " ";
+    var inputArray = input.Split(" ");
+    Console.WriteLine(WhichLongest(inputArray));
+}
+
+void ExerciseTwentyThree()
+{
+    //Skapa en metoden int[] IndexOfAll(string text, char c)
+    //som söker igenom strängen text och returnerar
+    //en int[] med index till alla förekomster av c i text.
+    Console.WriteLine("Skriv en sträng");
+    var input = Console.ReadLine() ?? " ";
+    foreach (var i in IndexOfAll(input, 'c'))
+    {
+        Console.WriteLine($"{i} = {input[i]}");
+    }
+}
+
 //Switch-meny funktion
 while (true)
 {
     Console.WriteLine("Välj ett program:");
-    for (var i = 0; i < 19; i++)
+    for (var i = 0; i < 21; i++)
     {
         Console.WriteLine($"Skriv {i + 1} för Uppgift {i + 1}");
     }
@@ -797,7 +883,16 @@ while (true)
                 ExerciseNineteen();
                 break;
             case 20:
-                ExerciseTwenty();
+                ExerciseTwenty(false);
+                break;
+            case 21:
+                ExerciseTwenty(true);
+                break;
+            case 22:
+                ExerciseTwentyTwo();
+                break;
+            case 23:
+                ExerciseTwentyThree();
                 break;
         }
     }
@@ -811,9 +906,9 @@ while (true)
 
 
 //Massa generiska funktioner
-void PrintSum(int one, int two, string mathCondition)
+void PrintSum(double one, double two, string mathCondition)
 {
-    var mathResult = 0;
+    double mathResult;
     switch (mathCondition)
     {
         case "+":
@@ -828,7 +923,11 @@ void PrintSum(int one, int two, string mathCondition)
         case "/":
             mathResult = one / two;
             break;
+        default:
+            mathResult = 0;
+            break;
     }
+
     Console.WriteLine($"{one} {mathCondition} {two} = {mathResult}");
 }
 
@@ -837,40 +936,103 @@ string MakeUpper(string mystring)
     return char.ToUpper(mystring[0]) + mystring[1..].ToLower();
 }
 
-void DrawBox(int width, int height, int playerX, int playerY, bool showPlayer)
+string[] DrawBox(int width, int height, int playerX, int playerY, bool showPlayer, int randomSharps)
 {
-    var DrawArray = new string[height];
+    var drawArray = new string[height];
+    var rand = new Random();
     for (var i = 0; i < height; i++)
     {
         for (var k = 0; k < width; k++)
         {
             if (k == playerX && i == playerY && showPlayer)
             {
-                DrawArray[i] += "@";
+                drawArray[i] += "@";
             }
             else
             {
                 if (i == 0 || i == height - 1)
                 {
-                    DrawArray[i] += "#";
+                    drawArray[i] += "#";
                 }
                 else
                 {
                     if (k == 0 || k == width - 1)
                     {
-                        DrawArray[i] += "#";
+                        drawArray[i] += "#";
                     }
                     else
                     {
-                        DrawArray[i] += "-";
+                        drawArray[i] += "-";
                     }
                 }
             }
         }
     }
 
-    foreach (var x in DrawArray)
+    var currentSharp = 0;
+    if (randomSharps > 0)
+    {
+        while (currentSharp < randomSharps)
+        {
+            var placeX = rand.Next(1, width - 1);
+            var placeY = rand.Next(1, height - 1);
+            if (placeX != playerX && placeY != playerY && drawArray[placeY][placeX] != '#')
+            {
+                drawArray[placeY] = drawArray[placeY].Remove(placeX, 1).Insert(placeX, "#");
+                currentSharp++;
+            }
+        }
+    }
+    return drawArray;
+}
+
+void PrintArray(string[] thisArray)
+{
+    foreach (var x in thisArray)
     {
         Console.WriteLine(x);
     }
+
+}
+
+string WhichLongest(string[] checkArray)
+{
+    for (var i = 0; i < checkArray.Length; i++)
+    {
+        for (var k = 0; k < checkArray.Length - 1; k++)
+        {
+            if (checkArray[k].Length > checkArray[i].Length)
+            {
+                var temp = checkArray[k];
+                checkArray[k] = checkArray[i];
+                checkArray[i] = temp;
+            }
+        }
+    }
+    return checkArray[^1];
+}
+
+int[] IndexOfAll(string text, char c)
+{
+    int[] indexes = new int[text.Length];
+    var temp = text.ToLower();
+    var i = 0;
+    foreach (var chars in temp)
+    {
+        if (chars == c)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            indexes[i] = temp.IndexOf(c);
+            temp = temp.Remove(temp.IndexOf(c), 1).Insert(temp.IndexOf(c), "|");
+            i++;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+        }
+        Console.Write(chars);
+    }
+    Console.ResetColor();
+    Array.Resize(ref indexes, i);
+    return indexes;
 }
