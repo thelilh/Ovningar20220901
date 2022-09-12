@@ -1,4 +1,6 @@
-﻿void ExerciseOne()
+﻿using Ovningar20220901;
+
+void ExerciseOne()
 {
     //1. Skriv ett program som frågar efter användarens namn och
     //skriver ut en hälsning på konsolen. Om namnet är "David" ska det skriva ut "Hej David!"
@@ -708,17 +710,28 @@ void ExerciseNineteen()
             break;
         }
     }
+    Snake snake = new Snake()
+    {
+        _height = numOne,
+        _width = numTwo,
+        RandomShapes = 0,
+        PlayerX = 0,
+        PlayerY = 0,
+        ShowPlayer = false,
+        drawArray = new string[numOne],
+        shouldPlay = false
+    };
 
-    PrintArray(DrawBox(numTwo, numOne, numTwo / 2, numOne / 2, false, 0));
+    snake.PrintArray(snake.DrawBox());
 }
 
 void ExerciseTwenty(bool shouldShowRandom)
 {
-    int numOne, numTwo, numThree;
+    Snake snake = new Snake();
     while (true)
     {
         Console.WriteLine("Vilken höjd vill du ha?");
-        if (int.TryParse(Console.ReadLine(), out numOne))
+        if (int.TryParse(Console.ReadLine(), out snake._height))
         {
             break;
         }
@@ -726,7 +739,7 @@ void ExerciseTwenty(bool shouldShowRandom)
     while (true)
     {
         Console.WriteLine("Vilken bredd vill du ha?");
-        if (int.TryParse(Console.ReadLine(), out numTwo))
+        if (int.TryParse(Console.ReadLine(), out snake._width))
         {
             break;
         }
@@ -736,7 +749,7 @@ void ExerciseTwenty(bool shouldShowRandom)
         while (true)
         {
             Console.WriteLine("Hur många slumpmässiga '#' vill du ha?");
-            if (int.TryParse(Console.ReadLine(), out numThree))
+            if (int.TryParse(Console.ReadLine(), out snake._randomShapes))
             {
                 break;
             }
@@ -744,49 +757,57 @@ void ExerciseTwenty(bool shouldShowRandom)
     }
     else
     {
-        numThree = 0;
+        snake._randomShapes = 0;
     }
 
-    var playerX = numTwo / 2;
-    var playerY = numOne / 2;
-    var shouldPlay = true;
-    string[] drawArray;
-    while (shouldPlay)
+    snake.drawArray = new string[snake._height];
+    snake.PlayerX = snake._width / 2;
+    snake.PlayerY = snake._height / 2;
+    snake.shouldPlay = true;
+    snake.ShowPlayer = true;
+    //var snake = new Snake()
+    //{
+    //    Height = numOne,
+    //    Width = numTwo,
+    //    RandomShapes = numThree,
+    //    PlayerX = numOne / 2,
+    //    PlayerY = numTwo / 2,
+    //    ShowPlayer = true,
+    //    drawArray = new string[numOne],
+    //    shouldPlay = true
+    //};
+    var sWalk = snake.Walk;
+    int[] lastDir = { 0, 0 };
+    while (snake.shouldPlay)
     {
         Console.Clear();
-        drawArray = DrawBox(numTwo, numOne, playerX, playerY, true, numThree);
-        PrintArray(drawArray);
-        var a = Console.ReadKey();
-
-        void Walk(int x, int y)
-        {
-            if (drawArray[playerY][playerX + x] != '#')
-            {
-                playerX += x;
-            }
-            if (drawArray[playerY + y][playerX] != '#')
-            {
-                playerY += y;
-            }
-        }
+        snake.drawArray = snake.DrawBox();
+        snake.PrintArray(snake.drawArray);
+        var a = Console.ReadKey(true);
         switch (a.Key)
         {
             case ConsoleKey.LeftArrow:
-                Walk(-1, 0);
+                lastDir[0] = -1;
+                lastDir[1] = 0;
                 break;
             case ConsoleKey.RightArrow:
-                Walk(1, 0);
+                lastDir[0] = 1;
+                lastDir[1] = 0;
                 break;
             case ConsoleKey.UpArrow:
-                Walk(0, -1);
+                lastDir[0] = 0;
+                lastDir[1] = -1;
                 break;
             case ConsoleKey.DownArrow:
-                Walk(0, 1);
+                lastDir[0] = 0;
+                lastDir[1] = 1;
                 break;
             default:
-                shouldPlay = false;
+                snake.shouldPlay = false;
                 break;
         }
+        sWalk(lastDir[0], lastDir[1]);
+        Thread.Sleep(500);
     }
 }
 
@@ -816,9 +837,9 @@ void ExerciseTwentyThree()
 //Switch-meny funktion
 var showMenu = true;
 var selection = 1;
+var lastSelection = 24;
 while (showMenu)
 {
-    const int lastSelection = 24;
     Console.WriteLine("Välj ett program:");
     for (var i = 1; i <= lastSelection; i++)
     {
@@ -944,6 +965,10 @@ while (showMenu)
                 selection = 1;
             }
         }
+        else if (keyTrueCheck == ConsoleKey.Escape)
+        {
+            break;
+        }
     }
 }
 
@@ -979,65 +1004,6 @@ string MakeUpper(string mystring)
     return char.ToUpper(mystring[0]) + mystring[1..].ToLower();
 }
 
-string[] DrawBox(int width, int height, int playerX, int playerY, bool showPlayer, int randomSharps)
-{
-    var drawArray = new string[height];
-    var rand = new Random();
-    for (var i = 0; i < height; i++)
-    {
-        for (var k = 0; k < width; k++)
-        {
-            if (k == playerX && i == playerY && showPlayer)
-            {
-                drawArray[i] += "@";
-            }
-            else
-            {
-                if (i == 0 || i == height - 1)
-                {
-                    drawArray[i] += "#";
-                }
-                else
-                {
-                    if (k == 0 || k == width - 1)
-                    {
-                        drawArray[i] += "#";
-                    }
-                    else
-                    {
-                        drawArray[i] += "-";
-                    }
-                }
-            }
-        }
-    }
-
-    var currentSharp = 0;
-    if (randomSharps > 0)
-    {
-        while (currentSharp < randomSharps)
-        {
-            var placeX = rand.Next(1, width - 1);
-            var placeY = rand.Next(1, height - 1);
-            if (placeX != playerX && placeY != playerY && drawArray[placeY][placeX] != '#')
-            {
-                drawArray[placeY] = drawArray[placeY].Remove(placeX, 1).Insert(placeX, "#");
-                currentSharp++;
-            }
-        }
-    }
-    return drawArray;
-}
-
-void PrintArray(string[] thisArray)
-{
-    foreach (var x in thisArray)
-    {
-        Console.WriteLine(x);
-    }
-
-}
-
 string WhichLongest(string[] checkArray)
 {
     for (var i = 0; i < checkArray.Length; i++)
@@ -1059,23 +1025,15 @@ int[] IndexOfAll(string text, char c)
 {
     int[] indexes = new int[text.Length];
     var temp = text.ToLower();
-    var i = 0;
-    foreach (var chars in temp)
+    var amountIndexes = 0;
+    for (var i = 0; i < temp.Length; i++)
     {
-        if (chars == c)
+        if (temp[i] == c)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            indexes[i] = temp.IndexOf(c);
-            temp = temp.Remove(temp.IndexOf(c), 1).Insert(temp.IndexOf(c), "|");
-            i++;
+            indexes[amountIndexes] = i;
+            amountIndexes++;
         }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-        }
-        Console.Write(chars);
     }
-    Console.ResetColor();
-    Array.Resize(ref indexes, i);
+    Array.Resize(ref indexes, amountIndexes);
     return indexes;
 }
