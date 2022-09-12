@@ -814,15 +814,35 @@ void ExerciseTwentyThree()
 }
 
 //Switch-meny funktion
-while (true)
+var showMenu = true;
+var selection = 1;
+while (showMenu)
 {
+    const int lastSelection = 24;
     Console.WriteLine("Välj ett program:");
-    for (var i = 0; i < 21; i++)
+    for (var i = 1; i <= lastSelection; i++)
     {
-        Console.WriteLine($"Skriv {i + 1} för Uppgift {i + 1}");
+        if (selection == i)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(i != lastSelection ? $">Uppgift {i})<" : ">Avsluta)<");
+        }
+        else
+        {
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(i != lastSelection ? $"Uppgift {i}) " : "Avsluta) ");
+        }
     }
-    if (int.TryParse(Console.ReadLine(), out var selection))
+    Console.ResetColor();
+
+    var keyCheck = Console.ReadKey();
+    var keyTrueCheck = keyCheck.Key;
+    var keyUp = ConsoleKey.UpArrow;
+    var keyDown = ConsoleKey.DownArrow;
+    if (keyCheck.Key == ConsoleKey.Enter)
     {
+        Console.Clear();
         switch (selection)
         {
             case 1:
@@ -894,14 +914,37 @@ while (true)
             case 23:
                 ExerciseTwentyThree();
                 break;
+            case 24:
+                showMenu = false;
+                break;
         }
     }
     else
     {
-        break;
+        Console.Clear();
+        if (keyTrueCheck == keyUp)
+        {
+            if (selection > 1)
+            {
+                selection--;
+            }
+            else
+            {
+                selection = lastSelection;
+            }
+        }
+        else if (keyTrueCheck == keyDown)
+        {
+            if (selection < lastSelection)
+            {
+                selection++;
+            }
+            else
+            {
+                selection = 1;
+            }
+        }
     }
-
-    Console.WriteLine("\n\n");
 }
 
 
