@@ -5,8 +5,6 @@
         public int _width;
         public int _height;
         public int _randomShapes;
-        private int[] _playerPos = new int[2];
-        private bool _showPlayer;
         private string[] _drawArray;
         public bool shouldPlay;
 
@@ -15,41 +13,30 @@
             get { return _drawArray; }
             set { _drawArray = value; }
         }
-        public int PlayerX
-        {
-            get { return _playerPos[0]; }
-            set { _playerPos[0] = value; }
-        }
-        public int PlayerY
-        {
-            get { return _playerPos[1]; }
-            set { _playerPos[1] = value; }
-        }
-        public bool ShowPlayer
-        {
-            get { return _showPlayer; }
-            set { _showPlayer = value; }
-        }
-        public int RandomShapes
-        {
-            get { return _randomShapes; }
-            set { _randomShapes = value; }
-        }
+        public int[,] PlayerPos { get; set; }
+        public bool ShowPlayer { get; set; }
 
 
         public string[] DrawBox()
         {
-            String[] tempArray = new string[_height];
+            var tempArray = new string[_height];
             var rand = new Random();
             for (var i = 0; i < _height; i++)
             {
                 for (var k = 0; k < _width; k++)
                 {
-                    if (k == _playerPos[0] && i == _playerPos[1] && _showPlayer)
+                    bool hasFound = false;
+                    //Console.WriteLine($"PlayerPos.Length: {PlayerPos.GetLength(0)}, PlayerPos.Rank: {PlayerPos.Rank}");
+                    for (var j = 0; j < PlayerPos.GetLength(0); j++)
                     {
-                        tempArray[i] += "@";
+                        if (k == PlayerPos[j, 1] && i == PlayerPos[j, 0])
+                        {
+                            Console.WriteLine($"x: {PlayerPos[j, 0]}, y: {PlayerPos[j, 1]}");
+                            tempArray[i] += "@";
+                            hasFound = true;
+                        }
                     }
-                    else
+                    if (!hasFound)
                     {
                         if (i == 0 || i == _height - 1)
                         {
@@ -76,7 +63,7 @@
             {
                 var placeX = rand.Next(1, _width - 1);
                 var placeY = rand.Next(1, _height - 1);
-                if (placeX == _playerPos[0] || placeY == _playerPos[1] || tempArray[placeY][placeX] == '#') continue;
+                if (tempArray[placeY][placeX] == '@' || tempArray[placeY][placeX] == '#') continue;
                 tempArray[placeY] = tempArray[placeY].Remove(placeX, 1).Insert(placeX, "#");
                 currentSharp++;
             }
@@ -94,20 +81,23 @@
 
         public void Walk(int x, int y)
         {
-            if (_playerPos[0] + x > 0 && _playerPos[0] + x < _width)
+            var newX = PlayerPos[0, 1] + x;
+            var newY = PlayerPos[0, 0] + y;
+            Console.WriteLine($"moveX = {x}, moveY = {y}, PlayerY = {newY}, PlayerX = {newX}");
+            if ((newX > 0 && newX < _width) || (newY > 0 && newY < _height))
             {
-                if (_drawArray[_playerPos[1]][_playerPos[0] + x] != '#')
+                if (drawArray[newY][newX] != '#')
                 {
-                    _playerPos[0] += x;
+                    for (var i = PlayerPos.GetLength(0) - 1; i > 0; i--)
+                    {
+                        PlayerPos[i, 0] = PlayerPos[i - 1, 0];
+                        PlayerPos[i, 1] = PlayerPos[i - 1, 1];
+                    }
+                    PlayerPos[0, 0] = newY;
+                    PlayerPos[0, 1] = newX;
                 }
             }
-            if (_playerPos[1] + y > 0 && _playerPos[1] + y < _height)
-            {
-                if (_drawArray[_playerPos[1] + y][_playerPos[0]] != '#')
-                {
-                    _playerPos[1] += y;
-                }
-            }
+
         }
     }
 }

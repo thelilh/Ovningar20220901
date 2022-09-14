@@ -714,9 +714,8 @@ void ExerciseNineteen()
     {
         _height = numOne,
         _width = numTwo,
-        RandomShapes = 0,
-        PlayerX = 0,
-        PlayerY = 0,
+        _randomShapes = 0,
+        PlayerPos = new int[1, 2] { { 0, 0 } },
         ShowPlayer = false,
         drawArray = new string[numOne],
         shouldPlay = false
@@ -761,21 +760,11 @@ void ExerciseTwenty(bool shouldShowRandom)
     }
 
     snake.drawArray = new string[snake._height];
-    snake.PlayerX = snake._width / 2;
-    snake.PlayerY = snake._height / 2;
+    var sX = snake._width / 2;
+    var sY = snake._height / 2;
+    snake.PlayerPos = new int[3, 2] { { sX, sY }, { sX, sY - 1 }, { sX, sY - 2 } }; //X, Y
     snake.shouldPlay = true;
     snake.ShowPlayer = true;
-    //var snake = new Snake()
-    //{
-    //    Height = numOne,
-    //    Width = numTwo,
-    //    RandomShapes = numThree,
-    //    PlayerX = numOne / 2,
-    //    PlayerY = numTwo / 2,
-    //    ShowPlayer = true,
-    //    drawArray = new string[numOne],
-    //    shouldPlay = true
-    //};
     var sWalk = snake.Walk;
     int[] lastDir = { 0, 0 };
     while (snake.shouldPlay)
@@ -807,7 +796,7 @@ void ExerciseTwenty(bool shouldShowRandom)
                 break;
         }
         sWalk(lastDir[0], lastDir[1]);
-        Thread.Sleep(500);
+        Thread.Sleep(50);
     }
 }
 
