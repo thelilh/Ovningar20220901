@@ -854,9 +854,9 @@
             //För att välja dessa olika konstruktörer måste det väljas när en skriver, det kommer upp en meny
             var bil = new Car();
             bil.Make = "BMW";
-            bil.Colour = "Svart";
+            bil.Colour = Colours.Svart;
             bil.Price = 100000;
-            var bil2 = new Car("Volvo", 500000, "Röd");
+            var bil2 = new Car("Volvo", 500000, Colours.Röd);
             bil2.Price = 200000;
         }
         public static void TwentySix()
@@ -888,12 +888,94 @@
         }
         public static void TwentyNine()
         {
-            Car c = new Car("Volvo", 10000);
-            Console.WriteLine(c.ToString());
+            var carArray = new Car[1000];
+            for (int i = carArray.Length - 1; i > 0; i--)
+            {
+                Car c = new Car("Volvo", 10000);
+                Console.WriteLine(c.ToString());
+                carArray[i] = c;
+            }
         }
         public static void Thirty()
         {
+            var computer = new RockPaperScissors()
+            {
+                Name = "Computer",
+                Pos = new int[] { 0, 0 }
+            };
+            var player = new RockPaperScissors()
+            {
+                Name = "Test",
+                Pos = new int[] { 30, 0 }
+            };
+            var isWin = RockPaperScissors.IsWin;
+            var Win = RockPaperScissors.Scenarios.Win;
+            var Lose = RockPaperScissors.Scenarios.Lose;
+            var choice = "N/A";
+            var choice2 = "N/A";
+            var choice3 = "N/A";
+            while (true)
+            {
+                Console.Clear();
+                player.Print();
+                computer.Print();
+                Console.WriteLine($"\nDu valde {choice}, datorn valde {choice2}, {choice3}");
+                Console.WriteLine("\nSten = Vänsterpil, Paper = Uppåtpil, Sax = Högerpil, Avsluta = Nedåtpil");
+                var rand = new Random();
+                computer.SetChoices = (RockPaperScissors.Choices)rand.Next(0, 3);
 
+                //Piltangenter som returnerar val. Upp = Sax, Vänster = Sten, Höger = Påse, Ner = Avsluta
+                ConsoleKeyInfo pilTangent;
+                while (true)
+                {
+                    pilTangent = Console.ReadKey();
+                    if (pilTangent.Key is ConsoleKey.UpArrow or ConsoleKey.LeftArrow or ConsoleKey.RightArrow
+                        or ConsoleKey.DownArrow)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{pilTangent.Key}");
+                    }
+                }
+
+                switch (pilTangent.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        player.SetChoices = RockPaperScissors.Choices.Paper;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        player.SetChoices = RockPaperScissors.Choices.Rock;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        player.SetChoices = RockPaperScissors.Choices.Scissors;
+                        break;
+                }
+                if (pilTangent.Key == ConsoleKey.DownArrow)
+                {
+                    break;
+                }
+
+                choice = $"{player.SetChoices}";
+                choice2 = $"{computer.SetChoices}";
+                var result = isWin(player.SetChoices, computer.SetChoices);
+                if (result == Win)
+                {
+                    choice3 = "Du vann!";
+                    player.Score++;
+                }
+                else if (result == Lose)
+                {
+                    choice3 = "Datorn vann!";
+                    computer.Score++;
+                }
+                else
+                {
+
+                    choice3 = "Ingen vann...";
+                }
+            }
         }
     }
 }

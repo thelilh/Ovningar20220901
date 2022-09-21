@@ -12,9 +12,10 @@
 	{
 		private string _make;
 		private int _price;
-		private string _colour;
+		private Colours _colour;
+		private int _length;
 
-		public string Colour
+		public Colours Colour
 		{
 			get { return _colour; }
 			set { _colour = value; }
@@ -51,7 +52,7 @@
 		{
 			Console.WriteLine($"Detta är en bil");
 		}
-		public Car(string make, int price, string colour)
+		public Car(string make, int price, Colours colour)
 		{
 			Make = make;
 			Price = price;
@@ -62,17 +63,9 @@
 		{
 			Make = make;
 			Price = price;
-			Random rand = new Random();
-			var randomColour = (Colours)rand.Next(0, 5);
-			Colour = randomColour switch
-			{
-				Colours.Blå => "Blå",
-				Colours.Grön => "Grön",
-				Colours.Röd => "Röd",
-				Colours.Svart => "Svart",
-				Colours.Vit => "Vit",
-				_ => "Regnbågsfärgad" //Likväl en regnbågsfärgad bil, bör detta var omöjligt!
-			};
+			var rand = new Random();
+			Colour = (Colours)rand.Next(0, 5);
+			_length = rand.Next(3, 5);
 		}
 
 		public void HalfPrice()
@@ -82,7 +75,7 @@
 
 		public override string ToString()
 		{
-			return $"Bilen är en {_make}, kostar {_price} och har färgen {_colour}";
+			return $"Bilen är en {_make}, kostar {_price}, är {_length}m och har färgen {_colour}";
 		}
 	}
 }
