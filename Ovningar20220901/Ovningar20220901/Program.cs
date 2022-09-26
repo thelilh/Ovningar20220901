@@ -1,32 +1,16 @@
 ﻿using Ovningar20220901;
 //Switch-meny funktion
 var showMenu = true;
-var selection = 1;
-var lastSelection = 31;
+const int lastSelection = 41;
 while (showMenu)
 {
     Console.WriteLine("Välj ett program:");
-    for (var i = 1; i <= lastSelection; i++)
+    for (var i = 1; i < lastSelection; i++)
     {
-        if (selection == i)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine(i != lastSelection ? $">Uppgift {i})<" : ">Avsluta)<");
-        }
-        else
-        {
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(i != lastSelection ? $"Uppgift {i}) " : "Avsluta) ");
-        }
+        Console.WriteLine($"Uppgift {i})");
     }
-    Console.ResetColor();
-
-    var keyCheck = Console.ReadKey();
-    var keyTrueCheck = keyCheck.Key;
-    var keyUp = ConsoleKey.UpArrow;
-    var keyDown = ConsoleKey.DownArrow;
-    if (keyCheck.Key == ConsoleKey.Enter)
+    var temp = Console.ReadLine();
+    if (int.TryParse(temp, out var selection))
     {
         Console.Clear();
         switch (selection)
@@ -121,6 +105,18 @@ while (showMenu)
             case 30:
                 Exercises.Thirty();
                 break;
+            case 31:
+                Exercises.ThirtyOne();
+                break;
+            case 32:
+                Exercises.ThirtyTwo();
+                break;
+            case 33:
+                Exercises.ThirtyThree();
+                break;
+            case 34:
+                Exercises.ThirtyFour();
+                break;
             default:
                 showMenu = false;
                 break;
@@ -128,33 +124,7 @@ while (showMenu)
     }
     else
     {
-        Console.Clear();
-        if (keyTrueCheck == keyUp)
-        {
-            if (selection > 1)
-            {
-                selection--;
-            }
-            else
-            {
-                selection = lastSelection;
-            }
-        }
-        else if (keyTrueCheck == keyDown)
-        {
-            if (selection < lastSelection)
-            {
-                selection++;
-            }
-            else
-            {
-                selection = 1;
-            }
-        }
-        else if (keyTrueCheck == ConsoleKey.Escape)
-        {
-            break;
-        }
+        break;
     }
 }
 

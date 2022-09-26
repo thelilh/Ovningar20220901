@@ -713,7 +713,7 @@
                     break;
                 }
             }
-            Snake snake = new Snake()
+            var snake = new Snake()
             {
                 _height = numOne,
                 _width = numTwo,
@@ -729,7 +729,7 @@
 
         public static void Twenty(bool shouldShowRandom)
         {
-            Snake snake = new Snake();
+            var snake = new Snake();
             while (true)
             {
                 Console.WriteLine("Vilken höjd vill du ha?");
@@ -880,7 +880,7 @@
         }
         public static void TwentyEight()
         {
-            Person p = new Person("Anna", "Berg");
+            var p = new Person("Anna", "Berg");
             Console.WriteLine(p.Name());
             p.FirstName = "Per";
             p.LastName = "Lind";
@@ -889,9 +889,9 @@
         public static void TwentyNine()
         {
             var carArray = new Car[1000];
-            for (int i = carArray.Length - 1; i > 0; i--)
+            for (var i = carArray.Length - 1; i > 0; i--)
             {
-                Car c = new Car("Volvo", 10000);
+                var c = new Car("Volvo", 10000);
                 Console.WriteLine(c.ToString());
                 carArray[i] = c;
             }
@@ -976,6 +976,40 @@
                     choice3 = "Ingen vann...";
                 }
             }
+        }
+
+        public static void ThirtyOne()
+        {
+            Console.WriteLine("Skriv en temperatur i Celsius:");
+            var userInput = Console.ReadLine();
+            if (!string.IsNullOrEmpty(userInput))
+            {
+                if (float.TryParse(userInput, out var userFloat))
+                {
+                    Funktioner.ConvertDegrees(userFloat, out var fahrenheit, out var kelvin);
+                    Console.WriteLine($"{userFloat}C är {fahrenheit}F och {kelvin}K");
+                }
+            }
+        }
+
+        public static void ThirtyTwo()
+        {
+            foreach (var x in Car.MakeCars(randomColours: false))
+            {
+                Console.WriteLine(x);
+            }
+        }
+
+        public static void ThirtyThree()
+        {
+            var temp = 2;
+            Console.WriteLine(Funktioner.MultiplyItself(ref temp));
+            Console.WriteLine(temp);
+        }
+
+        public static void ThirtyFour()
+        {
+            Car.SimulateTenCars();
         }
     }
 }

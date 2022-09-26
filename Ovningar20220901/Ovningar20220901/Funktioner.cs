@@ -66,5 +66,17 @@
             Array.Resize(ref indexes, amountIndexes);
             return indexes;
         }
+
+        public static void ConvertDegrees(float celsius, out float fahrenheit, out float kelvin)
+        {
+            fahrenheit = (float)((celsius * 1.8) + 32);
+            kelvin = (float)(celsius + 273.15);
+        }
+
+        public static string MultiplyItself(ref int toMultiply)
+        {
+            toMultiply *= toMultiply;
+            return $"{toMultiply}";
+        }
     }
 }
