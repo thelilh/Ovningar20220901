@@ -117,6 +117,24 @@ while (showMenu)
             case 34:
                 Exercises.ThirtyFour();
                 break;
+            case 35:
+                Exercises.ThirtyFive();
+                break;
+            case 36:
+                Exercises.ThirtySix();
+                break;
+            case 37:
+                Exercises.ThirtySeven();
+                break;
+            case 38:
+                Exercises.ThirtyEight();
+                break;
+            case 39:
+                Exercises.ThirtyNine();
+                break;
+            case 40:
+                Exercises.Fourty();
+                break;
             default:
                 showMenu = false;
                 break;
